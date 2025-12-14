@@ -81,30 +81,6 @@ print(f"موجودی اولیه: {w3.from_wei(w3.eth.get_balance(account.address
 
 # --- شروع چرخه اصلی تراکنش‌ها ---
 try:
-    # --- ۲. آماده‌سازی قرارداد InteractFeeProxy ---
-    with open('contract_addresses.json', 'r') as f:
-        proxy_address = json.load(f)['InteractFeeProxy']
-    with open('abis/InteractFeeProxy-ABI.json', 'r') as f:
-        proxy_abi = json.load(f)
-    
-    proxy_contract = w3.eth.contract(address=proxy_address, abi=proxy_abi)
-
-    # --- ۳. تراکنش اول (interactWithFee) ---
-    print("\n--- مرحله ۱: اجرای تراکنش 'interactWithFee' ---")
-    amount_to_send_wei = w3.to_wei(0.001, 'ether')
-    tx1 = proxy_contract.functions.interactWithFee().build_transaction({
-        'chainId': chain_id,
-        'from': account.address,
-        'nonce': w3.eth.get_transaction_count(account.address),
-        'value': amount_to_send_wei,
-        'gas': 200000, 
-        'gasPrice': w3.eth.gas_price
-    })
-    signed_tx1 = w3.eth.account.sign_transaction(tx1, private_key=private_key)
-    tx1_hash = w3.eth.send_raw_transaction(signed_tx1.raw_transaction)
-    w3.eth.wait_for_transaction_receipt(tx1_hash)
-    print(f"تراکنش 'interactWithFee' با موفقیت انجام شد. هش: {tx1_hash.hex()}")
-
     # --- ۴. تاخیر اول و تراکنش دوم (دیپلوی) ---
     delay1 = random.uniform(5, 20)
     print(f"\nتاخیر تصادفی برای {delay1:.2f} ثانیه...")
@@ -121,26 +97,8 @@ try:
     else:
         print("تصمیم: دیپلوی قرارداد NFT (ERC721)...")
         nft_abi, nft_bytecode = compile_contract('contracts/MyNFT.sol', 'MyNFT')
-        deploy_contract(w3, account, chain_id, nft_abi, nft_bytecode, random_name, random_name[:4].upper())
+        deploy_contract(w3, account, chain_id, nft_abi, nft_bytecode, random_name, random_name[:4].upper()) 
         
-    # --- ۵. تاخیر دوم و تراکنش سوم (Withdraw) ---
-    delay2 = random.uniform(5, 20)
-    print(f"\nتاخیر تصادفی برای {delay2:.2f} ثانیه...")
-    time.sleep(delay2)
-    
-    print("\n--- مرحله ۳: اجرای تراکنش 'withdrawEther' ---")
-    tx3 = proxy_contract.functions.withdrawEther().build_transaction({
-        'chainId': chain_id,
-        'from': account.address,
-        'nonce': w3.eth.get_transaction_count(account.address),
-        'gas': 100000,
-        'gasPrice': w3.eth.gas_price
-    })
-    signed_tx3 = w3.eth.account.sign_transaction(tx3, private_key=private_key)
-    tx3_hash = w3.eth.send_raw_transaction(signed_tx3.raw_transaction)
-    w3.eth.wait_for_transaction_receipt(tx3_hash)
-    print(f"تراکنش 'withdrawEther' با موفقیت انجام شد. هش: {tx3_hash.hex()}")
-
 except Exception as e:
     print(f"\n!!! یک خطای کلی رخ داد: {e}")
     exit(1)
