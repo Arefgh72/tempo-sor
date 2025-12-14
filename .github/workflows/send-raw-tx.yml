@@ -1,0 +1,38 @@
+# نام گردش کار
+name: Send Predefined Raw Transaction
+
+on:
+  # ۱. فعال‌سازی دستی
+  workflow_dispatch:
+
+  # ۲. فعال‌سازی زمان‌بندی شده
+  schedule:
+    # این دستور هر روز ساعت 5:00 صبح به وقت UTC اجرا می‌شود
+    - cron: '0 5 * * *'
+
+jobs:
+  send-transaction:
+    runs-on: ubuntu-latest
+
+    steps:
+      # مرحله ۱: کپی کردن کدهای ریپازیتوری
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      # مرحله ۲: نصب و تنظیم پایتون
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      # مرحله ۳: نصب کتابخانه‌های مورد نیاز
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # مرحله ۴: اجرای اسکریپت ارسال تراکنش
+      - name: Run Raw Transaction Sender Script
+        env:
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+        run: python send_raw_tx.py
