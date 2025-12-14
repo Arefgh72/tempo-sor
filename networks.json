@@ -5,6 +5,6 @@
     "network_name": "TempoTestnet",
     "rpc_url": "https://rpc.testnet.tempo.xyz",
     "chain_id": "42429",
-    "explorer_url": "https://explore.tempo.xyz",
+    "explorer_url": "https://explore.tempo.xyz"
   }
 ]
