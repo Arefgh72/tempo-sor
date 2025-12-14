@@ -1,10 +1,10 @@
 [
   {
-    "id": "GiwaTestnet-91342",
-    "displayName": "GiwaTestnet",
-    "network_name": "GiwaTestnet",
-    "rpc_url": "https://sepolia-rpc.giwa.io/",
-    "chain_id": "91342",
-    "explorer_url": "https://sepolia-explorer.giwa.io"
+    "id": "TempoTestnet-42429",
+    "displayName": "TempoTestnet",
+    "network_name": "TempoTestnet",
+    "rpc_url": "https://rpc.testnet.tempo.xyz",
+    "chain_id": "42429",
+    "explorer_url": "https://explore.tempo.xyz",
   }
 ]
